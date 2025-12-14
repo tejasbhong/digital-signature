@@ -1,0 +1,31 @@
+# Generate supplier RSA key pair + certificate
+openssl req -x509 -newkey rsa:2048 \
+-keyout supplier-private.pem \
+-out supplier.crt \
+-days 3650 \
+-nodes \
+-subj "/CN=SUPPLIER"
+
+# Convert supplier private key to PKCS#8 (Java mandatory)
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt \
+-in supplier-private.pem \
+-out supplier-private-pkcs8.pem
+
+# Extract supplier public key
+openssl pkey -in supplier-private.pem -pubout -out supplier-public.pem
+
+# Generate consumer RSA key pair + certificate
+openssl req -x509 -newkey rsa:2048 \
+-keyout consumer-private.pem \
+-out consumer.crt \
+-days 3650 \
+-nodes \
+-subj "/CN=CONSUMER"
+
+# Convert consumer private key to PKCS#8
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt \
+-in consumer-private.pem \
+-out consumer-private-pkcs8.pem
+
+# Extract consumer public key
+openssl pkey -in consumer-private.pem -pubout -out consumer-public.pem
